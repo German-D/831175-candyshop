@@ -1,7 +1,7 @@
 # Личный проект «Кэндишоп» [![Build status][travis-image]][travis-url]
 
 * Студент: [Герман Дольников](https://up.htmlacademy.ru/javascript/15/user/831175).
-* Наставник: `Неизвестно`.
+* Наставник: `Магомед Кандаев`.
 
 ---
 
