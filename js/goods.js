@@ -39,7 +39,6 @@ var createManyIceCream = function (numberObj) {
   return manyIceCream;
 }
 
-
 var iCList = document.querySelector('.catalog__cards');
 var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
 
@@ -130,24 +129,3 @@ bucketList.appendChild(fragment);
 };
 
 renderBucket(iceCreamBucket);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
