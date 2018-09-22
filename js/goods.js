@@ -18,6 +18,26 @@ var getRandom = function (number) {
   return Math.round(Math.random() * number);
 };
 
+var getRandomInRange = function (min, max) {
+ return Math.round(Math.random() * (max - min)) + min;
+};
+
+var getRandomBoolean = function() {
+if(Math.random() > 0.5){
+  return True
+}
+else {return False}
+};
+      
+var getContents = function () {
+        var contents = [];
+        for (var u = 0; u < getRandom(manyContents.length - 1); i++) {
+          contents.push(manyContents[u]);
+        }
+        return contents.join(', ');
+      }
+
+
 var createManyIceCream = function (numberObj) {
   var manyIceCream = [];
   for (var i = 0; i < numberObj; i++) {
@@ -25,24 +45,19 @@ var createManyIceCream = function (numberObj) {
       name: manyNames[getRandom(manyNames.length - 1)],
       picture: manyPictures[getRandom(manyPictures.length - 1)],
       amount: getRandom(20),
-      price: getRandom(1400) + 100,
-      weight: getRandom(270) + 30,
-      rating: {value: getRandom(5), number: getRandom(890) + 10},
+      price: getRandomInRange(100, 1500),
+      weight: getRandomInRange(30, 300),
+      rating: {value: getRandomInRange(1, 5),number: getRandomInRange(10, 900)},
       nutritionFacts:
-      {sugar: getRandom(1)},
-      content: function () {
-        var contents = [];
-        for (var u = 0; u < getRandom(manyContents.length - 1); i++) {
-          contents.push(manyContents[u]);
-        }
-        return contents.join(', ');
-      }});
-  }
+      {sugar: getRandomBoolean(),
+      energy: getRandomInRange(70, 500),
+      contents: getContents()}
+  });
   return manyIceCream;
 };
 
 var iCList = document.querySelector('.catalog__cards');
-var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
+var templateCard = document.querySelector('#card').contents.querySelector('.catalog__card');
 
 var createCards = function (manyIC) {
   var iceCreamElement = templateCard.cloneNode(true);
@@ -86,7 +101,7 @@ var createCards = function (manyIC) {
   if (!manyIC.nutritionFacts.sugar) {
     iceCreamElement.querySelector('.card__characteristic').textContent = 'Без сахара';
   }
-  iceCreamElement.querySelector('.card__composition-list').textContent = manyIC.content();
+  iceCreamElement.querySelector('.card__composition-list').textContent = manyIC.contents();
 
   return iceCreamElement;
 };
@@ -101,9 +116,10 @@ var renderIC = function (myIC) {
 
 renderIC(createManyIceCream(26));
 
-var iceCreamBucket = createManyIceCream(3);
+// Корзина
+
 var bucketList = document.querySelector('.goods__cards');
-var templateBucket = document.querySelector('#card-order').content.querySelector('.goods_card');
+var templateBucket = document.querySelector('#card-order').contents.querySelector('.goods_card');
 
 var createBucket = function (manyBucket) {
   var bucketElement = templateBucket.cloneNode(true);
@@ -124,4 +140,4 @@ var renderBucket = function (ICArr) {
   bucketList.appendChild(fragment);
 };
 
-renderBucket(iceCreamBucket);
+renderBucket(createManyIceCream(3))
