@@ -19,14 +19,26 @@ var getRandomInRange = function (min, max) {
   return Math.round(Math.random() * (max - min)) + min;
 };
 
-var getContent = function (arrIC) {
-  for (var j = 0; j < arrIC.length; j++) {
-    arrIC.push(arrIC.splice((Math.random() * arrIC.length), 1));
-  }
-  var contents = arrIC.slice(0, getRandomInRange(1, 18));
-  return contents.join(', ');
-};
+// var getContent = function (arrIC) {
+//   for (var j = 0; j < arrIC.length; j++) {
+//     arrIC.push(arrIC.splice((Math.random() * arrIC.length), 1));
+//   }
+//   var contents = arrIC.slice(0, getRandomInRange(1, 18));
+//   return contents.join(', ');
+// };
 
+var getContent = function (arrIC) {
+  var copyArray = arrIC.slice();
+  var lastIndex = copyArray.length - 1;
+  for (var i = lastIndex; i >= 0; i--) {
+    var randomIndex = getRandomInRange(i, lastIndex);
+    var tempValue = copyArray[i];
+    copyArray[i] = copyArray[randomIndex];
+    copyArray[randomIndex] = tempValue;
+  }
+  copyArray = copyArray.slice(0, getRandomInRange(1, 18));
+  return copyArray.join(', ');
+};
 
 var getRandomBoolean = function () {
   return Math.random() > 0.5;
@@ -52,6 +64,7 @@ var createManyIceCream = function (numberObj) {
 
     );
   }
+  console.log(manyIceCream);
   return manyIceCream;
 };
 
