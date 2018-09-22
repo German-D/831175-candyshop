@@ -19,21 +19,17 @@ var getRandomInRange = function (min, max) {
   return Math.round(Math.random() * (max - min)) + min;
 };
 
-var getRandomBoolean = function () {
-  if (Math.random() > 0.5) {
-    return true;
-  } else {
-    return false;
+var getContent = function (arrIC) {
+  for (var j = 0; j < arrIC.length; j++) {
+    arrIC.push(arrIC.splice((Math.random() * arrIC.length), 1));
   }
+  var contents = arrIC.slice(0, getRandomInRange(1, 18));
+  return contents.join(', ');
 };
 
-var getContents = function () {
-  function compareRandom() {
-    return Math.random() - 0.5;
-  }
-  manyContents.sort(compareRandom);
-  var contents = manyContents.slice(0, getRandomInRange(1, 18));
-  return contents.join(', ');
+
+var getRandomBoolean = function () {
+  return Math.random() > 0.5;
 };
 
 var createManyIceCream = function (numberObj) {
@@ -51,7 +47,7 @@ var createManyIceCream = function (numberObj) {
           nutritionFacts:
       {sugar: getRandomBoolean(),
         energy: getRandomInRange(70, 500),
-        contents: getContents()}
+        contents: getContent(manyContents)}
         }
 
     );
@@ -63,11 +59,11 @@ var createCard = function (manyIC, template) {
   var iceCreamElement = template.cloneNode(true);
 
   if (manyIC.amount >= 1 && manyIC.amount <= 5) {
-    iceCreamElement.classList.remove('card--in-stock');
     iceCreamElement.classList.add('card--little');
   } else if (manyIC.amount === 0) {
-    iceCreamElement.classList.remove('card--in-stock');
     iceCreamElement.classList.add('card--soon');
+  } else {
+    iceCreamElement.classList.add('card--in-stock');
   }
 
   iceCreamElement.querySelector('.card__title').textContent = manyIC.name;
@@ -75,7 +71,6 @@ var createCard = function (manyIC, template) {
   iceCreamElement.querySelector('.card__price').firstChild.textContent = manyIC.price;
   iceCreamElement.querySelector('.card__price').querySelector('.card__weight').textContent = '/ ' + manyIC.weight + 'Г';
 
-  iceCreamElement.querySelector('.stars__rating').classList.remove('stars__rating--five');
   switch (manyIC.rating.value) {
     case 5: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--five');
       break;
@@ -85,13 +80,13 @@ var createCard = function (manyIC, template) {
       break;
     case 2: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--two');
       break;
-    default: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--one');
+    case 1: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--one');
+      break;
+    default: break;
   }
 
   iceCreamElement.querySelector('.star__count').textContent = manyIC.rating.number;
-
-  iceCreamElement.querySelector('.card__characteristic').textContent = (manyIC.nutritionFacts.sugar) ? 'Содержит сахар' : 'Без сахара';
-
+  iceCreamElement.querySelector('.card__characteristic').textContent = manyIC.nutritionFacts.sugar ? 'Содержит сахар' : 'Без сахара';
   iceCreamElement.querySelector('.card__composition-list').textContent = manyIC.nutritionFacts.contents;
 
   return iceCreamElement;
@@ -100,18 +95,16 @@ var createCard = function (manyIC, template) {
 var renderAllIceCream = function (myIC) {
   var iCList = document.querySelector('.catalog__cards');
   var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
-
   var fragment = document.createDocumentFragment();
-  for (var j = 0; j < myIC.length; j++) {
+  myIC.forEach(function (item, j) {
     fragment.appendChild(createCard(myIC[j], templateCard));
-  }
+  });
   iCList.appendChild(fragment);
 };
 
 renderAllIceCream(createManyIceCream(26));
 
 // Корзина
-
 var createBucket = function (manyBucket, template) {
   var bucketElement = template.cloneNode(true);
   bucketElement.querySelector('.card-order__title').textContent = manyBucket.name;
@@ -122,14 +115,13 @@ var createBucket = function (manyBucket, template) {
   return bucketElement;
 };
 
-
 var renderBucket = function (ICArr) {
   var bucketList = document.querySelector('.goods__cards');
   var templateBucket = document.querySelector('#card-order').content.querySelector('.goods_card');
   var fragment = document.createDocumentFragment();
-  for (var y = 0; y < ICArr.length; y++) {
+  ICArr.forEach(function (item, y) {
     fragment.appendChild(createBucket(ICArr[y], templateBucket));
-  }
+  });
   bucketList.appendChild(fragment);
 };
 
