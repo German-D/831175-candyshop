@@ -28,7 +28,7 @@ var getRandomBoolean = function () {
 };
 
 var getContents = function () {
-  function compareRandom(a, b) {
+  function compareRandom() {
     return Math.random() - 0.5;
   }
   manyContents.sort(compareRandom);
