@@ -19,14 +19,6 @@ var getRandomInRange = function (min, max) {
   return Math.round(Math.random() * (max - min)) + min;
 };
 
-// var getContent = function (arrIC) {
-//   for (var j = 0; j < arrIC.length; j++) {
-//     arrIC.push(arrIC.splice((Math.random() * arrIC.length), 1));
-//   }
-//   var contents = arrIC.slice(0, getRandomInRange(1, 18));
-//   return contents.join(', ');
-// };
-
 var getContent = function (arrIC) {
   var copyArray = arrIC.slice();
   var lastIndex = copyArray.length - 1;
@@ -64,7 +56,6 @@ var createManyIceCream = function (numberObj) {
 
     );
   }
-  console.log(manyIceCream);
   return manyIceCream;
 };
 
