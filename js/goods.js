@@ -27,7 +27,8 @@ var getString = function (anyArr) {
   return anyArr.join(', ');
 };
 
-var getContent = function (arrIC) {
+
+var getCopyArray = function (arrIC) {
   var copyArray = arrIC.slice();
   for (var i = copyArray.length - 1; i >= 0; i--) {
     var randomIndex = getRandomInRange(i, copyArray.length - 1);
@@ -35,9 +36,14 @@ var getContent = function (arrIC) {
     copyArray[i] = copyArray[randomIndex];
     copyArray[randomIndex] = tempValue;
   }
-  var randomLengthArr = getRandomSliceArr(copyArray);
+  return copyArray;
+};
+
+var getContent = function (myArr) {
+  var randomLengthArr = getRandomSliceArr(getCopyArray(myArr));
   return getString(randomLengthArr);
 };
+
 
 var getRandomBoolean = function () {
   return Math.random() > 0.5;
