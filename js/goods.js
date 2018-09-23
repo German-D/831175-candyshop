@@ -19,17 +19,24 @@ var getRandomInRange = function (min, max) {
   return Math.round(Math.random() * (max - min)) + min;
 };
 
+var getRandomSliceArr = function (anyArr) {
+  return anyArr.slice(0, getRandomInRange(1, anyArr.length - 1));
+};
+
+var getString = function (anyArr) {
+  return anyArr.join(', ');
+};
+
 var getContent = function (arrIC) {
   var copyArray = arrIC.slice();
-  var lastIndex = copyArray.length - 1;
-  for (var i = lastIndex; i >= 0; i--) {
-    var randomIndex = getRandomInRange(i, lastIndex);
+  for (var i = copyArray.length - 1; i >= 0; i--) {
+    var randomIndex = getRandomInRange(i, copyArray.length - 1);
     var tempValue = copyArray[i];
     copyArray[i] = copyArray[randomIndex];
     copyArray[randomIndex] = tempValue;
   }
-  copyArray = copyArray.slice(0, getRandomInRange(1, 18));
-  return copyArray.join(', ');
+  var randomLengthArr = getRandomSliceArr(copyArray);
+  return getString(randomLengthArr);
 };
 
 var getRandomBoolean = function () {
