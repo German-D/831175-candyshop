@@ -143,3 +143,13 @@ var renderBucket = function (ICArr) {
 };
 
 renderBucket(createManyIceCream(3));
+
+var favoriteCard = document.document.querySelector('.card__btn-favorite');
+var onButtonFavotite = function () {
+  favoriteCard.classlist.toggle('ard__btn-favorite--selected');
+};
+
+
+favoriteCard.addEventLister('click', onButtonFavotite);
+
+
