@@ -118,8 +118,9 @@ var renderAllIceCream = function (myIC) {
   });
   iCList.appendChild(fragment);
 };
-var iceCreamList = createManyIceCream(26)
-renderAllIceCream(createManyIceCream(26));
+
+var iceCreamList = createManyIceCream(26);
+renderAllIceCream(iceCreamList);
 
 // Корзина
 var createBucket = function (manyBucket, template) {
@@ -145,8 +146,6 @@ var createBucket = function (manyBucket, template) {
 // renderBucket(createManyIceCream(3));
 
 
-
-
 var favoriteCard = document.querySelector('.card__btn-favorite');
 var onButtonFavorite = function () {
   favoriteCard.classList.toggle('card__btn-favorite--selected');
@@ -155,53 +154,26 @@ var onButtonFavorite = function () {
 favoriteCard.addEventListener('click', onButtonFavorite);
 
 
+var catalogCards = document.querySelector('.catalog__card');
 
 
-// var addElementToBucket = document.querySelector('.card__btn');
+var onButtonBucket = function (evt) {
+  if (evt.target.classList.value === 'card__btn') {
+    var currentObjSrc = evt.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3];
+    console.log(currentObjSrc);
 
-// var onButtonAddtoBucket = function (evt) {
-//   console.log(evt)
-// };
+    var find = function (array, value) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].picture === value) {
+          return array[i];
+        }
+      }
+    };
 
-// addElementToBucket.addEventListener('click', onButtonAddtoBucket);
+    var oneBucketCard = find(iceCreamList, currentObjSrc);
 
-
-
-
-var oneCard = document.querySelector('catalog__card');
-oneCard.addEventListener
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }
+};
+catalogCards.addEventListener('click', onButtonBucket);
 
 
