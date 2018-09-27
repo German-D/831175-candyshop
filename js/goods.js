@@ -154,16 +154,16 @@ var onButtonFavorite = function () {
 favoriteCard.addEventListener('click', onButtonFavorite);
 
 
-var catalogCards = document.querySelector('.catalog__card');
-
+var catalogCards = document.querySelector('.catalog__cards');
 
 var onButtonBucket = function (evt) {
   if (evt.target.classList.value === 'card__btn') {
-    var currentObjSrc = evt.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3];
+    var currentObjSrc = evt.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].getAttribute('src');
     console.log(currentObjSrc);
 
     var find = function (array, value) {
       for (var i = 0; i < array.length; i++) {
+        console.log('array[i] ' + array[i].picture);
         if (array[i].picture === value) {
           return array[i];
         }
@@ -171,9 +171,19 @@ var onButtonBucket = function (evt) {
     };
 
     var oneBucketCard = find(iceCreamList, currentObjSrc);
+    delete oneBucketCard.amount;
+    console.log(oneBucketCard);
+    var elementBucketObj = Object.assign(bucketElement, oneBucketCard);
+    console.log(elementBucketObj);
+    bucketArr.push(elementBucketObj);
+    console.log('bucketArr ' + bucketArr);
 
   }
 };
+
+
 catalogCards.addEventListener('click', onButtonBucket);
 
+var bucketElement = {orderedAmount: 1};
+var bucketArr = [];
 
