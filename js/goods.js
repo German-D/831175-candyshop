@@ -143,8 +143,7 @@ var createBucket = function (manyBucket, template) {
 //   bucketList.appendChild(fragment);
 // };
 
-// renderBucket(createManyIceCream(3));
-
+// renderBucket(bucketArr);
 
 var favoriteCard = document.querySelector('.card__btn-favorite');
 var onButtonFavorite = function () {
@@ -169,6 +168,7 @@ var onButtonBucket = function (evt) {
         }
       }
     };
+    debugger
 
     var oneBucketCard = find(iceCreamList, currentObjSrc);
     delete oneBucketCard.amount;
