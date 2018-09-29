@@ -27,7 +27,6 @@ var getString = function (anyArr) {
   return anyArr.join(', ');
 };
 
-
 var getRandomSortArray = function (arrIC) {
   var copyArray = arrIC.slice();
   for (var i = copyArray.length - 1; i >= 0; i--) {
@@ -61,10 +60,11 @@ var createManyIceCream = function (numberObj) {
           price: getRandomInRange(100, 1500),
           weight: getRandomInRange(30, 300),
           rating: {value: getRandomInRange(1, 5), number: getRandomInRange(10, 900)},
-          nutritionFacts:
-      {sugar: getRandomBoolean(),
-        energy: getRandomInRange(70, 500),
-        contents: getContent(manyContents)}
+          nutritionFacts: {
+            sugar: getRandomBoolean(),
+            energy: getRandomInRange(70, 500),
+            contents: getContent(manyContents)
+          }
         }
 
     );
@@ -89,17 +89,23 @@ var createCard = function (manyIC, template) {
   iceCreamElement.querySelector('.card__price').querySelector('.card__weight').textContent = '/ ' + manyIC.weight + 'Г';
 
   switch (manyIC.rating.value) {
-    case 5: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--five');
+    case 5:
+      iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--five');
       break;
-    case 4: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--four');
+    case 4:
+      iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--four');
       break;
-    case 3: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--three');
+    case 3:
+      iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--three');
       break;
-    case 2: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--two');
+    case 2:
+      iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--two');
       break;
-    case 1: iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--one');
+    case 1:
+      iceCreamElement.querySelector('.stars__rating').classList.add('stars__rating--one');
       break;
-    default: break;
+    default:
+      break;
   }
 
   iceCreamElement.querySelector('.star__count').textContent = manyIC.rating.number;
@@ -129,61 +135,128 @@ var createBucket = function (manyBucket, template) {
   bucketElement.querySelector('.card-order__img').src = manyBucket.picture;
   bucketElement.querySelector('.card-order__img').alt = manyBucket.name;
   bucketElement.querySelector('.card-order__price').textContent = manyBucket.price + ' Р';
-
+  bucketElement.querySelector('.card-order__label').querySelector('.card-order__count').value = manyBucket.orderedAmount;
   return bucketElement;
 };
 
-// var renderBucket = function (ICArr) {
-//   var bucketList = document.querySelector('.goods__cards');
-//   var templateBucket = document.querySelector('#card-order').content.querySelector('.goods_card');
-//   var fragment = document.createDocumentFragment();
-//   ICArr.forEach(function (item, y) {
-//     fragment.appendChild(createBucket(ICArr[y], templateBucket));
-//   });
-//   bucketList.appendChild(fragment);
-// };
+var renderBucket = function (ICArr) {
+  var bucketList = document.querySelector('.goods__cards');
+  var templateBucket = document.querySelector('#card-order').content.querySelector('.goods_card');
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(createBucket(ICArr[ICArr.length - 1], templateBucket));
+  bucketList.appendChild(fragment);
+};
 
-// renderBucket(bucketArr);
+var refreshBucket = function (ICArr) {
+  var bucketList = document.querySelector('.goods__cards');
+  var templateBucket = document.querySelector('#card-order').content.querySelector('.goods_card');
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(createBucket(ICArr, templateBucket));
+  var oldNode = bucketList.querySelector('img[alt="' + ICArr.name + '"]').parentNode.parentNode;
+  bucketList.replaceChild(fragment, oldNode);
+};
 
+// Избранное
 var favoriteCard = document.querySelector('.card__btn-favorite');
 var onButtonFavorite = function () {
   favoriteCard.classList.toggle('card__btn-favorite--selected');
 };
-
 favoriteCard.addEventListener('click', onButtonFavorite);
 
-
+// Корзина
 var catalogCards = document.querySelector('.catalog__cards');
+var bucketHeader = document.querySelector('.main-header__basket');
 
 var onButtonBucket = function (evt) {
   if (evt.target.classList.value === 'card__btn') {
     var currentObjSrc = evt.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].getAttribute('src');
-    console.log(currentObjSrc);
-
-    var find = function (array, value) {
+    var findObj = function (array, value) {
       for (var i = 0; i < array.length; i++) {
-        console.log('array[i] ' + array[i].picture);
         if (array[i].picture === value) {
-          return array[i];
+          var arrayEl = array[i];
+        }
+      }
+      return arrayEl;
+    };
+
+    var oneBucketCard = findObj(iceCreamList, currentObjSrc);
+
+    var checkInBucket = function (obj) {
+      var eslintKostyl = false;
+      for (var i = 0; i < bucketArr.length; i++) {
+        if (bucketArr[i].picture === obj.picture) {
+          eslintKostyl = true;
+        }
+      }
+      return eslintKostyl;
+    };
+    var checkingForBucket = function (obj) {
+      if (obj.amount !== 0) {
+        obj.amount--;
+        if (bucketArr.length === 0) {
+          obj.amount--;
+          var newBucketObj = Object.assign({}, {orderedAmount: 1, name: obj.name, picture: obj.picture, price: obj.price, weight: obj.weight, rating: {value: obj.rating.value, number: obj.rating.number}, nutritionFacts: {sugar: obj.nutritionFacts.sugar, energy: obj.nutritionFacts.energy, contents: obj.nutritionFacts.contents}});
+          bucketArr.push(newBucketObj);
+          bucketCosts = bucketCosts + newBucketObj.price;
+          bucketQuantity++;
+          renderBucket(bucketArr);
+
+        } else if (checkInBucket(obj)) {
+          for (var i = 0; i < bucketArr.length; i++) {
+            if (bucketArr[i].picture === obj.picture) {
+              bucketCosts = bucketCosts + oneBucketCard.price;
+              bucketQuantity++;
+              bucketArr[i].orderedAmount++;
+              bucketArr[i].price = bucketArr[i].price + bucketArr[i].price;
+              refreshBucket(bucketArr[i]);
+            }
+          }
+
+        } else {
+          var newBucketObj2 = Object.assign({}, {orderedAmount: 1, name: obj.name, picture: obj.picture, price: obj.price, weight: obj.weight, rating: {value: obj.rating.value, number: obj.rating.number}, nutritionFacts: {sugar: obj.nutritionFacts.sugar, energy: obj.nutritionFacts.energy, contents: obj.nutritionFacts.contents}});
+          bucketArr.push(newBucketObj2);
+          bucketCosts = bucketCosts + newBucketObj2.price;
+          bucketQuantity++;
+          renderBucket(bucketArr);
         }
       }
     };
-    debugger
-
-    var oneBucketCard = find(iceCreamList, currentObjSrc);
-    delete oneBucketCard.amount;
-    console.log(oneBucketCard);
-    var elementBucketObj = Object.assign(bucketElement, oneBucketCard);
-    console.log(elementBucketObj);
-    bucketArr.push(elementBucketObj);
-    console.log('bucketArr ' + bucketArr);
-
+    checkingForBucket(oneBucketCard);
+    bucketHeader.textContent = ('В корзине ' + bucketQuantity + ' товара на ' + bucketCosts + '₽');
   }
 };
-
-
 catalogCards.addEventListener('click', onButtonBucket);
-
-var bucketElement = {orderedAmount: 1};
 var bucketArr = [];
+var bucketCosts = 0;
+var bucketQuantity = 0;
+
+// Блок доставки
+var deliveryStore = document.querySelector('.deliver__store');
+var deliveryCourier = document.querySelector('.deliver__courier');
+
+var onRadioButtonDelivery = function (evt) {
+  if (evt.target.id === 'deliver__courier') {
+    deliveryCourier.classList.remove('visually-hidden');
+    deliveryStore.classList.add('visually-hidden');
+  } else if (evt.target.id === 'deliver__store') {
+    deliveryCourier.classList.add('visually-hidden');
+    deliveryStore.classList.remove('visually-hidden');
+  }
+};
+var deliverContainer = document.querySelector('.deliver');
+deliverContainer.addEventListener('click', onRadioButtonDelivery);
+
+// Фильтр цены
+var maxPriceFilter = document.querySelector('.range__price--max');
+var minPriceFilter = document.querySelector('.range__price--min');
+var priceBar = document.querySelector('.range__filter');
+var onBarPriceUp = function (evt) {
+  if (evt.target.classList === 'ange__btn--right') {
+    maxPriceFilter.textContent = event.clientX;
+  } else if (evt.target.classList === 'ange__btn--left') {
+    minPriceFilter.textContent = event.clientX;
+  }
+};
+priceBar.addEventListener('mouseup', onBarPriceUp);
+
 
