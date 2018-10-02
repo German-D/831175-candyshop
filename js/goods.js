@@ -157,67 +157,81 @@ var refreshBucket = function (ICArr) {
 };
 
 // Избранное
-var favoriteCard = document.querySelector('.card__btn-favorite');
-var onButtonFavorite = function () {
-  favoriteCard.classList.toggle('card__btn-favorite--selected');
+var onButtonFavorite = function (evt) {
+  evt.target.removeAttribute('href');
+  if (evt.target.classList.contains('card__btn-favorite')) {
+    evt.target.classList.toggle('card__btn-favorite--selected');
+  }
 };
-favoriteCard.addEventListener('click', onButtonFavorite);
+document.addEventListener('click', onButtonFavorite);
 
 // Корзина
 var catalogCards = document.querySelector('.catalog__cards');
 var bucketHeader = document.querySelector('.main-header__basket');
+var bucketArr = [];
+var bucketCosts = 0;
+var bucketQuantity = 0;
+var onButtonAddInBucket = function (evt) {
 
-var onButtonBucket = function (evt) {
-  if (evt.target.classList.value === 'card__btn') {
-    var currentObjSrc = evt.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].getAttribute('src');
+
+  if (evt.target.classList.contains('card__btn')) {
+    evt.target.removeAttribute('href');
+
+    var findParent = function (target, classEl) {
+      var current;
+      while (!target.classList.contains(classEl)) {
+        target = target.parentNode;
+        current = target;
+      }
+      return current;
+    };
+    var currentObjSrc = findParent(evt.target, 'catalog__card').querySelector('.card__img').getAttribute('src');
+
     var findObj = function (array, value) {
       for (var i = 0; i < array.length; i++) {
         if (array[i].picture === value) {
-          var arrayEl = array[i];
+          return array[i];
         }
       }
-      return arrayEl;
+      return undefined;
     };
 
     var oneBucketCard = findObj(iceCreamList, currentObjSrc);
 
     var checkInBucket = function (obj) {
-      var eslintKostyl = false;
-      for (var i = 0; i < bucketArr.length; i++) {
-        if (bucketArr[i].picture === obj.picture) {
-          eslintKostyl = true;
-        }
-      }
-      return eslintKostyl;
+      return bucketArr.some(function (item) {
+        return item.picture === obj.picture;
+      });
     };
+
+    var findObjinBucket = function (obj) {
+      return bucketArr.find(function (item) {
+        return item.picture === obj.picture;
+      });
+    };
+
+
+    // myIC.forEach(function (item, j) {
+    //   fragment.appendChild(createCard(myIC[j], templateCard));
+    // });
+    // iCList.appendChild(fragment);
     var checkingForBucket = function (obj) {
       if (obj.amount !== 0) {
         obj.amount--;
-        if (bucketArr.length === 0) {
-          obj.amount--;
-          var newBucketObj = Object.assign({}, {orderedAmount: 1, name: obj.name, picture: obj.picture, price: obj.price, weight: obj.weight, rating: {value: obj.rating.value, number: obj.rating.number}, nutritionFacts: {sugar: obj.nutritionFacts.sugar, energy: obj.nutritionFacts.energy, contents: obj.nutritionFacts.contents}});
+        if (!checkInBucket(obj)) {
+          var newBucketObj = Object.assign({}, {orderedAmount: 1}, obj);
+          delete newBucketObj.amount;
           bucketArr.push(newBucketObj);
-          bucketCosts = bucketCosts + newBucketObj.price;
+          bucketCosts += newBucketObj.price;
           bucketQuantity++;
           renderBucket(bucketArr);
-
-        } else if (checkInBucket(obj)) {
-          for (var i = 0; i < bucketArr.length; i++) {
-            if (bucketArr[i].picture === obj.picture) {
-              bucketCosts = bucketCosts + oneBucketCard.price;
-              bucketQuantity++;
-              bucketArr[i].orderedAmount++;
-              bucketArr[i].price = bucketArr[i].price + bucketArr[i].price;
-              refreshBucket(bucketArr[i]);
-            }
-          }
-
         } else {
-          var newBucketObj2 = Object.assign({}, {orderedAmount: 1, name: obj.name, picture: obj.picture, price: obj.price, weight: obj.weight, rating: {value: obj.rating.value, number: obj.rating.number}, nutritionFacts: {sugar: obj.nutritionFacts.sugar, energy: obj.nutritionFacts.energy, contents: obj.nutritionFacts.contents}});
-          bucketArr.push(newBucketObj2);
-          bucketCosts = bucketCosts + newBucketObj2.price;
+          var foo = findObjinBucket(obj);
+          bucketCosts = bucketCosts + oneBucketCard.price;
           bucketQuantity++;
-          renderBucket(bucketArr);
+          foo.orderedAmount++;
+          foo.price += foo.price;
+          refreshBucket(foo);
         }
       }
     };
@@ -225,10 +239,10 @@ var onButtonBucket = function (evt) {
     bucketHeader.textContent = ('В корзине ' + bucketQuantity + ' товара на ' + bucketCosts + '₽');
   }
 };
-catalogCards.addEventListener('click', onButtonBucket);
-var bucketArr = [];
-var bucketCosts = 0;
-var bucketQuantity = 0;
+catalogCards.addEventListener('click', onButtonAddInBucket);
+
+// Блок оплаты
+
 
 // Блок доставки
 var deliveryStore = document.querySelector('.deliver__store');
@@ -244,19 +258,24 @@ var onRadioButtonDelivery = function (evt) {
   }
 };
 var deliverContainer = document.querySelector('.deliver');
-deliverContainer.addEventListener('click', onRadioButtonDelivery);
+deliverContainer.addEventListener('change', onRadioButtonDelivery);
+
+
+
+
+
 
 // Фильтр цены
 var maxPriceFilter = document.querySelector('.range__price--max');
 var minPriceFilter = document.querySelector('.range__price--min');
 var priceBar = document.querySelector('.range__filter');
+
 var onBarPriceUp = function (evt) {
-  if (evt.target.classList === 'ange__btn--right') {
+  if (evt.target.classList.contains === 'range__btn--right') {
     maxPriceFilter.textContent = event.clientX;
-  } else if (evt.target.classList === 'ange__btn--left') {
+  } else if (evt.target.classList.contains === 'range__btn--left') {
     minPriceFilter.textContent = event.clientX;
   }
 };
+
 priceBar.addEventListener('mouseup', onBarPriceUp);
-
-
