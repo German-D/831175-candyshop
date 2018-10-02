@@ -249,14 +249,9 @@ var deliveryStore = document.querySelector('.deliver__store');
 var deliveryCourier = document.querySelector('.deliver__courier');
 
 var onRadioButtonDelivery = function (evt) {
-  if (evt.target.id === 'deliver__courier') {
-    deliveryCourier.classList.remove('visually-hidden');
-    deliveryStore.classList.add('visually-hidden');
-  } else if (evt.target.id === 'deliver__store') {
-    deliveryCourier.classList.add('visually-hidden');
-    deliveryStore.classList.remove('visually-hidden');
+    deliveryCourier.classList.toggle('visually-hidden');
+    deliveryStore.classList.toggle('visually-hidden');
   }
-};
 var deliverContainer = document.querySelector('.deliver');
 deliverContainer.addEventListener('change', onRadioButtonDelivery);
 
