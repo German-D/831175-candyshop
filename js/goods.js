@@ -242,22 +242,27 @@ var onButtonAddInBucket = function (evt) {
 catalogCards.addEventListener('click', onButtonAddInBucket);
 
 // Блок оплаты
+var payCard = document.querySelector('.payment__card-wrap');
+var payCash = document.querySelector('.payment__cash-wrap');
+var payBlock = document.querySelector('.payment');
+var onRadioButtonPayment = function () {
+  payCard.classList.toggle('visually-hidden');
+  payCash.classList.toggle('visually-hidden');
+};
 
+payBlock.addEventListener('change', onRadioButtonPayment);
 
 // Блок доставки
 var deliveryStore = document.querySelector('.deliver__store');
 var deliveryCourier = document.querySelector('.deliver__courier');
 
-var onRadioButtonDelivery = function (evt) {
-    deliveryCourier.classList.toggle('visually-hidden');
-    deliveryStore.classList.toggle('visually-hidden');
-  }
+var onRadioButtonDelivery = function () {
+  deliveryCourier.classList.toggle('visually-hidden');
+  deliveryStore.classList.toggle('visually-hidden');
+};
+
 var deliverContainer = document.querySelector('.deliver');
 deliverContainer.addEventListener('change', onRadioButtonDelivery);
-
-
-
-
 
 
 // Фильтр цены
