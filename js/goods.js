@@ -272,11 +272,14 @@ var minPriceFilter = document.querySelector('.range__price--min');
 var priceBar = document.querySelector('.range__filter');
 
 var onBarPriceUp = function (evt) {
-  if (evt.target.classList.contains === 'range__btn--right') {
-    maxPriceFilter.textContent = event.clientX;
-  } else if (evt.target.classList.contains === 'range__btn--left') {
-    minPriceFilter.textContent = event.clientX;
+  var priceBarWidth = priceBar.clientWidth;
+  var priceBarWidthHardCode = 100;
+  if (evt.target.classList.contains('range__btn--right')) {
+    maxPriceFilter.textContent = Math.round(priceBarWidthHardCode * (event.clientX / priceBarWidth));
+  } else if (evt.target.classList.contains('range__btn--left')) {
+    minPriceFilter.textContent = Math.round(priceBarWidthHardCode * (event.clientX / priceBarWidth));
   }
 };
+
 
 priceBar.addEventListener('mouseup', onBarPriceUp);
