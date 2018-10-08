@@ -27,6 +27,7 @@ var getString = function (anyArr) {
   return anyArr.join(', ');
 };
 
+// Перемешай массив и верни
 var getRandomSortArray = function (arrIC) {
   var copyArray = arrIC.slice();
   for (var i = copyArray.length - 1; i >= 0; i--) {
@@ -38,6 +39,7 @@ var getRandomSortArray = function (arrIC) {
   return copyArray;
 };
 
+// Верни массив случайной длины
 var getContent = function (myArr) {
   var randomLengthArr = getRandomSliceArr(getRandomSortArray(myArr));
   return getString(randomLengthArr);
@@ -50,12 +52,14 @@ var getRandomBoolean = function () {
 
 var createManyIceCream = function (numberObj) {
   var manyIceCream = [];
+  var pictureArraySort = getRandomSortArray(manyPictures);
   for (var i = 0; i < numberObj; i++) {
     manyIceCream.push(
 
         {
           name: manyNames[getRandomInRange(0, manyNames.length - 1)],
-          picture: manyPictures[getRandomInRange(0, manyPictures.length - 1)],
+          // picture: manyPictures[getRandomInRange(0, manyPictures.length - 1)],
+          picture: pictureArraySort[i],
           amount: getRandomInRange(0, 20),
           price: getRandomInRange(100, 1500),
           weight: getRandomInRange(30, 300),
@@ -157,13 +161,15 @@ var refreshBucket = function (ICArr) {
 };
 
 // Избранное
+var catalogCard = document.querySelector('.catalog__cards');
+
 var onButtonFavorite = function (evt) {
-  evt.target.removeAttribute('href');
+  event.preventDefault();
   if (evt.target.classList.contains('card__btn-favorite')) {
     evt.target.classList.toggle('card__btn-favorite--selected');
   }
 };
-document.addEventListener('click', onButtonFavorite);
+catalogCard.addEventListener('click', onButtonFavorite);
 
 // Корзина
 var catalogCards = document.querySelector('.catalog__cards');
@@ -204,17 +210,12 @@ var onButtonAddInBucket = function (evt) {
       });
     };
 
-    var findObjinBucket = function (obj) {
+    var findObjInBucket = function (obj) {
       return bucketArr.find(function (item) {
         return item.picture === obj.picture;
       });
     };
 
-
-    // myIC.forEach(function (item, j) {
-    //   fragment.appendChild(createCard(myIC[j], templateCard));
-    // });
-    // iCList.appendChild(fragment);
     var checkingForBucket = function (obj) {
       if (obj.amount !== 0) {
         obj.amount--;
@@ -226,12 +227,12 @@ var onButtonAddInBucket = function (evt) {
           bucketQuantity++;
           renderBucket(bucketArr);
         } else {
-          var foo = findObjinBucket(obj);
+          var itemInBucket = findObjInBucket(obj);
           bucketCosts = bucketCosts + oneBucketCard.price;
           bucketQuantity++;
-          foo.orderedAmount++;
-          foo.price += foo.price;
-          refreshBucket(foo);
+          itemInBucket.orderedAmount++;
+          itemInBucket.price += obj.price;
+          refreshBucket(itemInBucket);
         }
       }
     };
