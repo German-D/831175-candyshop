@@ -245,7 +245,7 @@ catalogCards.addEventListener('click', onButtonAddInBucketClick);
 // Блок оплаты
 var payCard = document.querySelector('.payment__card-wrap');
 var payCash = document.querySelector('.payment__cash-wrap');
-var payBlock = document.querySelector('.payment');
+var payBlock = document.querySelector('.payment__method');
 var onRadioButtonPaymentChange = function () {
   payCard.classList.toggle('visually-hidden');
   payCash.classList.toggle('visually-hidden');
@@ -262,7 +262,7 @@ var onRadioButtonDeliveryChange = function () {
   deliveryStore.classList.toggle('visually-hidden');
 };
 
-var deliverContainer = document.querySelector('.deliver');
+var deliverContainer = document.querySelector('.deliver__toggle');
 deliverContainer.addEventListener('change', onRadioButtonDeliveryChange);
 
 
@@ -283,3 +283,39 @@ var onBarPriceMouseup = function (evt) {
 
 
 priceBar.addEventListener('mouseup', onBarPriceMouseup);
+
+// Валидации карты
+var inputCardData = document.querySelector('#payment__card-number');
+var onInputCardDataInvalid = function (evt) {
+  var cardData = inputCardData.value;
+  var cardDataArray = cardData.split('');
+  for (var i = 0; i < cardDataArray.length; i++) {
+    cardDataArray[i] = parseInt(cardDataArray[i], 10);
+  }
+
+  for (var j = 0; j < cardDataArray.length; j++) {
+    if (cardDataArray[j] % 2 !== 0) {
+      cardDataArray[j] *= 2;
+    }
+  }
+
+  for (var y = 0; y < cardDataArray.length; y++) {
+    if (cardDataArray[y] >= 10) {
+      cardDataArray[y] -= 9;
+    }
+  }
+
+  var cardDataArraySum = cardDataArray.reduce(function (sum, current) {
+    return sum + current;
+  }, 0);
+
+
+  if (cardDataArraySum % 10 !== 0) {
+    evt.target.setCustomValidity('Введён несуществующий номер карты');
+  } else {
+    evt.target.setCustomValidity('');
+  }
+};
+
+inputCardData.addEventListener('input', onInputCardDataInvalid);
+
