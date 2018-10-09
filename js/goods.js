@@ -163,13 +163,13 @@ var refreshBucket = function (ICArr) {
 // Избранное
 var catalogCard = document.querySelector('.catalog__cards');
 
-var onButtonFavorite = function (evt) {
+var onButtonFavoriteClick = function (evt) {
   event.preventDefault();
   if (evt.target.classList.contains('card__btn-favorite')) {
     evt.target.classList.toggle('card__btn-favorite--selected');
   }
 };
-catalogCard.addEventListener('click', onButtonFavorite);
+catalogCard.addEventListener('click', onButtonFavoriteClick);
 
 // Корзина
 var catalogCards = document.querySelector('.catalog__cards');
@@ -177,7 +177,7 @@ var bucketHeader = document.querySelector('.main-header__basket');
 var bucketArr = [];
 var bucketCosts = 0;
 var bucketQuantity = 0;
-var onButtonAddInBucket = function (evt) {
+var onButtonAddInBucketClick = function (evt) {
 
 
   if (evt.target.classList.contains('card__btn')) {
@@ -240,30 +240,30 @@ var onButtonAddInBucket = function (evt) {
     bucketHeader.textContent = ('В корзине ' + bucketQuantity + ' товара на ' + bucketCosts + '₽');
   }
 };
-catalogCards.addEventListener('click', onButtonAddInBucket);
+catalogCards.addEventListener('click', onButtonAddInBucketClick);
 
 // Блок оплаты
 var payCard = document.querySelector('.payment__card-wrap');
 var payCash = document.querySelector('.payment__cash-wrap');
 var payBlock = document.querySelector('.payment');
-var onRadioButtonPayment = function () {
+var onRadioButtonPaymentChange = function () {
   payCard.classList.toggle('visually-hidden');
   payCash.classList.toggle('visually-hidden');
 };
 
-payBlock.addEventListener('change', onRadioButtonPayment);
+payBlock.addEventListener('change', onRadioButtonPaymentChange);
 
 // Блок доставки
 var deliveryStore = document.querySelector('.deliver__store');
 var deliveryCourier = document.querySelector('.deliver__courier');
 
-var onRadioButtonDelivery = function () {
+var onRadioButtonDeliveryChange = function () {
   deliveryCourier.classList.toggle('visually-hidden');
   deliveryStore.classList.toggle('visually-hidden');
 };
 
 var deliverContainer = document.querySelector('.deliver');
-deliverContainer.addEventListener('change', onRadioButtonDelivery);
+deliverContainer.addEventListener('change', onRadioButtonDeliveryChange);
 
 
 // Фильтр цены
@@ -271,15 +271,15 @@ var maxPriceFilter = document.querySelector('.range__price--max');
 var minPriceFilter = document.querySelector('.range__price--min');
 var priceBar = document.querySelector('.range__filter');
 
-var onBarPriceUp = function (evt) {
+var onBarPriceMouseup = function (evt) {
   var priceBarWidth = priceBar.clientWidth;
   var priceBarWidthHardCode = 100;
   if (evt.target.classList.contains('range__btn--right')) {
-    maxPriceFilter.textContent = Math.round(priceBarWidthHardCode * (event.clientX / priceBarWidth));
+    maxPriceFilter.textContent = Math.round(priceBarWidthHardCode * (event.target.offsetLeft / priceBarWidth));
   } else if (evt.target.classList.contains('range__btn--left')) {
-    minPriceFilter.textContent = Math.round(priceBarWidthHardCode * (event.clientX / priceBarWidth));
+    minPriceFilter.textContent = Math.round(priceBarWidthHardCode * (event.target.offsetLeft / priceBarWidth));
   }
 };
 
 
-priceBar.addEventListener('mouseup', onBarPriceUp);
+priceBar.addEventListener('mouseup', onBarPriceMouseup);
