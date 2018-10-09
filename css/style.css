@@ -284,12 +284,12 @@ body {
   border-radius: 15px;
   transition: background-color 0.2s ease;
 }
-.main-header__basket:focus {
+/*.main-header__basket:focus {
   background-color: rgba(255, 255, 255, 0.2);
   color: #828282;
   transition: color 0.2s ease;
   border-radius: 15px;
-}
+}*/
 .main-header__text-wrap {
   width: 740px;
   margin: 0 auto;
@@ -611,10 +611,10 @@ body {
   background-color: #8269ff;
   transition: background-color 0.2s ease;
 }
-.card__btn-favorite:focus {
+/*.card__btn-favorite:focus {
   background-color: #6e58d9;
   transition: background-color 0.2s ease
-}
+}*/
 .card__btn-favorite--selected {
   background-color: #8269ff
 }
