@@ -287,6 +287,7 @@ priceBar.addEventListener('mouseup', onBarPriceMouseup);
 // Валидации карты
 var inputCardData = document.querySelector('#payment__card-number');
 var onInputCardDataInvalid = function (evt) {
+  console.log(11111);
   var cardData = inputCardData.value;
   var cardDataArray = cardData.split('');
   for (var i = 0; i < cardDataArray.length; i++) {
@@ -317,5 +318,6 @@ var onInputCardDataInvalid = function (evt) {
   }
 };
 
-inputCardData.addEventListener('input', onInputCardDataInvalid);
+inputCardData.addEventListener('invalid', onInputCardDataInvalid);
+
 
