@@ -287,37 +287,46 @@ priceBar.addEventListener('mouseup', onBarPriceMouseup);
 // Валидации карты
 var inputCardData = document.querySelector('#payment__card-number');
 var onInputCardDataInvalid = function (evt) {
-  console.log(11111);
   var cardData = inputCardData.value;
   var cardDataArray = cardData.split('');
-  for (var i = 0; i < cardDataArray.length; i++) {
-    cardDataArray[i] = parseInt(cardDataArray[i], 10);
-  }
 
-  for (var j = 0; j < cardDataArray.length; j++) {
-    if (cardDataArray[j] % 2 !== 0) {
-      cardDataArray[j] *= 2;
+  var cardDataIntArray = cardDataArray.map(function (item) {
+    item = parseInt(item, 10);
+    if (item % 2 !== 0) {
+      item *= 2;
     }
-  }
 
-  for (var y = 0; y < cardDataArray.length; y++) {
-    if (cardDataArray[y] >= 10) {
-      cardDataArray[y] -= 9;
+    if (item >= 10) {
+      item -= 9;
     }
-  }
+    return item;
+  });
 
-  var cardDataArraySum = cardDataArray.reduce(function (sum, current) {
+  var cardDataArraySum = cardDataIntArray.reduce(function (sum, current) {
     return sum + current;
   }, 0);
 
-
-  if (cardDataArraySum % 10 !== 0) {
-    evt.target.setCustomValidity('Введён несуществующий номер карты');
-  } else {
-    evt.target.setCustomValidity('');
-  }
+  var validationMsg = cardDataArraySum % 10 !== 0 ? 'Введён несуществующий номер карты' : '';
+  evt.target.setCustomValidity(validationMsg);
 };
 
 inputCardData.addEventListener('invalid', onInputCardDataInvalid);
 
+// Изменение статуса карты
+var paymentBlock = document.querySelector('.payment');
+var inputCardYear = paymentBlock.querySelector('#payment__card-date');
+var inputCardCvc = paymentBlock.querySelector('#payment__card-cvc');
+var inputCardName = paymentBlock.querySelector('#payment__cardholder');
+var cardStatus = paymentBlock.querySelector('.payment__card-status');
+
+
+var onPaymentBlockChange = function () {
+  if (inputCardCvc.value >= 100 && inputCardCvc.value <= 999 && inputCardYear.value && inputCardName.value) {
+    cardStatus.textContent = 'Одобрен';
+  } else {
+    cardStatus.textContent = 'НЕ ОПРЕДЕЛЁН';
+  }
+};
+
+paymentBlock.addEventListener('change', onPaymentBlockChange);
 
