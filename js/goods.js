@@ -291,22 +291,16 @@ var onInputCardDataInvalid = function (evt) {
   var cardDataArray = cardData.split('');
 
   var cardDataIntArray = cardDataArray.map(function (item) {
-    item = parseInt(item, 10);
-    if (item % 2 !== 0) {
-      item *= 2;
-    }
-
-    if (item >= 10) {
-      item -= 9;
-    }
-    return item;
-  });
-
-  var cardDataArraySum = cardDataIntArray.reduce(function (sum, current) {
+    return parseInt(item, 10);
+  }).map(function (item) {
+    return item % 2 !== 0 ? item * 2 : item;
+  }).map(function (item) {
+    return item >= 10 ? item - 9 : item;
+  }).reduce(function (sum, current) {
     return sum + current;
   }, 0);
 
-  var validationMsg = cardDataArraySum % 10 !== 0 ? 'Введён несуществующий номер карты' : '';
+  var validationMsg = cardDataIntArray % 10 !== 0 ? 'Введён несуществующий номер карты' : '';
   evt.target.setCustomValidity(validationMsg);
 };
 
@@ -329,4 +323,51 @@ var onPaymentBlockChange = function () {
 };
 
 paymentBlock.addEventListener('change', onPaymentBlockChange);
+
+
+// if (payCard.classList.contains('visually-hidden')) {
+//   inputCardYear.removeAttribute('required');
+//   inputCardCvc.removeAttribute('required');
+//   inputCardName.removeAttribute('required');
+// } else {
+//   inputCardYear.setAttribute('required', '');
+//   inputCardCvc.setAttribute('required', '');
+//   inputCardName.setAttribute('required', '');
+// }
+
+
+// -------------------------------------
+// value = inputCardYear.value
+// month = monthYearData[0]
+
+
+var isCardDateValid = function (value) {
+  var isMonthValid = function (month) {
+    return (month > 12) ? false : true;
+  };
+  var isYearValid = function (year) {
+    var currentYear = (new Date()).getFullYear();
+    return (year > currentYear) ? false : true;
+  };
+  if (value.length === 5) {
+    var yearDataArray = value.split('');
+    if (yearDataArray[2] === '/') {
+      var monthYearData = value.split('/').map(function (item) {
+        return parseInt(item, 10);
+      });
+      if (isMonthValid(monthYearData[0]) && isYearValid(monthYearData[1])) {
+        return true;
+      } return false;
+    } return false;
+  } return false;
+};
+
+var onCardYearInputChange = function (evt) {
+  var customInvalidEvent = new Event('invalid');
+  evt.target.dispatchEvent(customInvalidEvent);
+  if (!isCardDateValid(inputCardYear.value)) {
+    evt.target.setCustomValidity('Данные карты неверные');
+  }
+};
+inputCardYear.addEventListener('invalid', onCardYearInputChange);
 
