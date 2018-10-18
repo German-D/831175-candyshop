@@ -243,12 +243,17 @@ var onButtonAddInBucketClick = function (evt) {
 catalogCards.addEventListener('click', onButtonAddInBucketClick);
 
 // Блок оплаты
+var paymentBlock = document.querySelector('.payment');
 var payCard = document.querySelector('.payment__card-wrap');
 var payCash = document.querySelector('.payment__cash-wrap');
 var payBlock = document.querySelector('.payment__method');
 var onRadioButtonPaymentChange = function () {
   payCard.classList.toggle('visually-hidden');
   payCash.classList.toggle('visually-hidden');
+  inputCardData.toggleAttribute('disables');
+  inputCardYear.toggleAttribute('disables');
+  inputCardCvc.toggleAttribute('disables');
+  inputCardName.toggleAttribute('disables');
 };
 
 payBlock.addEventListener('change', onRadioButtonPaymentChange);
@@ -307,7 +312,6 @@ var onInputCardDataInvalid = function (evt) {
 inputCardData.addEventListener('invalid', onInputCardDataInvalid);
 
 // Изменение статуса карты
-var paymentBlock = document.querySelector('.payment');
 var inputCardYear = paymentBlock.querySelector('#payment__card-date');
 var inputCardCvc = paymentBlock.querySelector('#payment__card-cvc');
 var inputCardName = paymentBlock.querySelector('#payment__cardholder');
@@ -323,22 +327,6 @@ var onPaymentBlockChange = function () {
 };
 
 paymentBlock.addEventListener('change', onPaymentBlockChange);
-
-
-// if (payCard.classList.contains('visually-hidden')) {
-//   inputCardYear.removeAttribute('required');
-//   inputCardCvc.removeAttribute('required');
-//   inputCardName.removeAttribute('required');
-// } else {
-//   inputCardYear.setAttribute('required', '');
-//   inputCardCvc.setAttribute('required', '');
-//   inputCardName.setAttribute('required', '');
-// }
-
-
-// -------------------------------------
-// value = inputCardYear.value
-// month = monthYearData[0]
 
 
 var isCardDateValid = function (value) {
