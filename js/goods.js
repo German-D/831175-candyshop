@@ -247,24 +247,35 @@ var paymentBlock = document.querySelector('.payment');
 var payCard = document.querySelector('.payment__card-wrap');
 var payCash = document.querySelector('.payment__cash-wrap');
 var payBlock = document.querySelector('.payment__method');
+
 var onRadioButtonPaymentChange = function () {
   payCard.classList.toggle('visually-hidden');
   payCash.classList.toggle('visually-hidden');
-  inputCardData.toggleAttribute('disables');
-  inputCardYear.toggleAttribute('disables');
-  inputCardCvc.toggleAttribute('disables');
-  inputCardName.toggleAttribute('disables');
+  inputCardData.toggleAttribute('disabled');
+  inputCardYear.toggleAttribute('disabled');
+  inputCardCvc.toggleAttribute('disabled');
+  inputCardName.toggleAttribute('disabled');
 };
 
 payBlock.addEventListener('change', onRadioButtonPaymentChange);
 
 // Блок доставки
+var inputStreetDelivery = document.querySelector('#deliver__street');
+var inputHouseDelivery = document.querySelector('#deliver__house');
+var inputFloorDelivery = document.querySelector('#deliver__floor');
+var inputFlatDelivery = document.querySelector('#deliver__room');
+
+
 var deliveryStore = document.querySelector('.deliver__store');
 var deliveryCourier = document.querySelector('.deliver__courier');
 
 var onRadioButtonDeliveryChange = function () {
   deliveryCourier.classList.toggle('visually-hidden');
   deliveryStore.classList.toggle('visually-hidden');
+  inputStreetDelivery.toggleAttribute('disabled');
+  inputHouseDelivery.toggleAttribute('disabled');
+  inputFloorDelivery.toggleAttribute('disabled');
+  inputFlatDelivery.toggleAttribute('disabled');
 };
 
 var deliverContainer = document.querySelector('.deliver__toggle');
@@ -291,11 +302,10 @@ priceBar.addEventListener('mouseup', onBarPriceMouseup);
 
 // Валидации карты
 var inputCardData = document.querySelector('#payment__card-number');
-var onInputCardDataInvalid = function (evt) {
-  var cardData = inputCardData.value;
-  var cardDataArray = cardData.split('');
-
-  var cardDataIntArray = cardDataArray.map(function (item) {
+var isCardNumberValid = function () {
+  var cardData = inputCardData.value; // получил значение что ввёл
+  var cardDataArray = cardData.split(''); // сделал из этого массив
+  var cardDataIntArray = cardDataArray.map(function (item) { // запустил луну
     return parseInt(item, 10);
   }).map(function (item) {
     return item % 2 !== 0 ? item * 2 : item;
@@ -304,9 +314,19 @@ var onInputCardDataInvalid = function (evt) {
   }).reduce(function (sum, current) {
     return sum + current;
   }, 0);
+  if (cardDataIntArray % 10 !== 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
-  var validationMsg = cardDataIntArray % 10 !== 0 ? 'Введён несуществующий номер карты' : '';
-  evt.target.setCustomValidity(validationMsg);
+var onInputCardDataInvalid = function (evt) {
+  if (!isCardNumberValid) {
+    var customInvalidEvent = new Event('invalid');
+    evt.target.dispatchEvent(customInvalidEvent);
+    evt.target.setCustomValidity('Введён несуществующий номер карты');
+  }
 };
 
 inputCardData.addEventListener('invalid', onInputCardDataInvalid);
@@ -317,9 +337,16 @@ var inputCardCvc = paymentBlock.querySelector('#payment__card-cvc');
 var inputCardName = paymentBlock.querySelector('#payment__cardholder');
 var cardStatus = paymentBlock.querySelector('.payment__card-status');
 
-
 var onPaymentBlockChange = function () {
-  if (inputCardCvc.value >= 100 && inputCardCvc.value <= 999 && inputCardYear.value && inputCardName.value) {
+  var isCardCvcValid = function () {
+    if (inputCardCvc.value <= 999 && inputCardCvc.value > 99) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  if (isCardNumberValid && isCardDateValid && isCardCvcValid && inputCardName.value) {
     cardStatus.textContent = 'Одобрен';
   } else {
     cardStatus.textContent = 'НЕ ОПРЕДЕЛЁН';
@@ -327,7 +354,6 @@ var onPaymentBlockChange = function () {
 };
 
 paymentBlock.addEventListener('change', onPaymentBlockChange);
-
 
 var isCardDateValid = function (value) {
   var isMonthValid = function (month) {
