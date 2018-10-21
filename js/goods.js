@@ -337,59 +337,51 @@ var cardStatus = paymentBlock.querySelector('.payment__card-status');
 
 var onPaymentBlockChange = function () {
   var isCardCvcValid = function () {
-    return (inputCardCvc.value <= 999 && inputCardCvc.value > 99) ? true : false;
+    return inputCardCvc.value <= 999 && inputCardCvc.value > 99 ? true : false;
   };
 
-  if (isCardNumberValid() && isCardDateValid(inputCardYear.value) && isCardCvcValid() && inputCardName.value) {
-    cardStatus.textContent = 'Одобрен';
-  } else {
-    cardStatus.textContent = 'НЕ ОПРЕДЕЛЁН';
-  }
+  var isCardValid = isCardNumberValid() && isCardDateValid(inputCardYear.value) && isCardCvcValid() && inputCardName.value;
+  cardStatus.textContent = isCardValid ? 'Одобрен' : 'НЕ ОПРЕДЕЛЁН';
 };
 
 inputCardYear.addEventListener('change', onPaymentBlockChange);
 inputCardCvc.addEventListener('change', onPaymentBlockChange);
 inputCardName.addEventListener('change', onPaymentBlockChange);
+inputCardData.addEventListener('change', onPaymentBlockChange);
 
 var isCardDateValid = function (value) {
   var isMonthValid = function (month) {
     return (month > 12) ? false : true;
   };
+
+
   var isYearValid = function (year) {
     var currentYear = String((new Date()).getFullYear()); // получаю строку 2018
-    var currentTimeArr = currentYear.split(''); // получаю массив строк [2, 0, 1, 8]
-    currentTimeArr.splice(2, 0, '/'); // добавляю в массив новый элемент
-    var currentYearXXXX = currentTimeArr.join('').split('/').map(function (item) { // превращаю массив в строку 20/18 → раздею на массив строк [20, 18] → привожу к числу
-      return parseInt(item, 10);
-    });
-
-    return (year >= currentYearXXXX[1]) ? false : true;
+    var currentYearInt = parseInt(currentYear.slice(2, 4), 10);
+    return year <= currentYearInt;
   };
-  if (value.length !== 5) {
+
+  if (value.length !== 5 || value[2] !== '/') {
     return false;
-  } else {
-    if (value[2] !== '/') {
-      return false;
-    } else {
-      var monthYearData = value.split('/').map(function (item) {
-        return parseInt(item, 10);
-      });
-      if (isMonthValid(monthYearData[0]) && isYearValid(monthYearData[1])) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   }
+
+  var monthYearData = value.split('/').map(function (item) {
+    return parseInt(item, 10);
+  });
+  return isMonthValid(monthYearData[0]) && isYearValid(monthYearData[1]);
 
 };
 
 var onCardYearInputChange = function (evt) {
-  var customInvalidEvent = new Event('invalid');
-  evt.target.dispatchEvent(customInvalidEvent);
-  if (!isCardDateValid(inputCardYear.value)) {
-    evt.target.setCustomValidity('Данные карты неверные');
-  }
+  evt.target.setCustomValidity(!isCardDateValid(inputCardYear.value) ? 'Данные карты неверные' : '');
 };
+
+var onBuyFormSubmitYear = function () {
+  var customInvalidEvent = new Event('invalid');
+  inputCardYear.dispatchEvent(customInvalidEvent);
+};
+
+
 inputCardYear.addEventListener('invalid', onCardYearInputChange);
+buySubmit.addEventListener('click', onBuyFormSubmitYear);
 
