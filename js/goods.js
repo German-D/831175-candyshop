@@ -324,6 +324,7 @@ var onInputCardDataInvalid = function (evt) {
 var onBuyFormSubmit = function () {
   var customInvalidEvent = new Event('invalid');
   inputCardData.dispatchEvent(customInvalidEvent);
+  inputCardYear.dispatchEvent(customInvalidEvent);
 };
 
 inputCardData.addEventListener('invalid', onInputCardDataInvalid);
@@ -337,7 +338,7 @@ var cardStatus = paymentBlock.querySelector('.payment__card-status');
 
 var onPaymentBlockChange = function () {
   var isCardCvcValid = function () {
-    return inputCardCvc.value <= 999 && inputCardCvc.value > 99 ? true : false;
+    return inputCardCvc.value <= 999 && inputCardCvc.value > 99
   };
 
   var isCardValid = isCardNumberValid() && isCardDateValid(inputCardYear.value) && isCardCvcValid() && inputCardName.value;
@@ -358,7 +359,7 @@ var isCardDateValid = function (value) {
   var isYearValid = function (year) {
     var currentYear = String((new Date()).getFullYear()); // получаю строку 2018
     var currentYearInt = parseInt(currentYear.slice(2, 4), 10);
-    return year <= currentYearInt;
+    return year >= currentYearInt;
   };
 
   if (value.length !== 5 || value[2] !== '/') {
@@ -376,12 +377,5 @@ var onCardYearInputChange = function (evt) {
   evt.target.setCustomValidity(!isCardDateValid(inputCardYear.value) ? 'Данные карты неверные' : '');
 };
 
-var onBuyFormSubmitYear = function () {
-  var customInvalidEvent = new Event('invalid');
-  inputCardYear.dispatchEvent(customInvalidEvent);
-};
-
-
 inputCardYear.addEventListener('invalid', onCardYearInputChange);
-buySubmit.addEventListener('click', onBuyFormSubmitYear);
 
