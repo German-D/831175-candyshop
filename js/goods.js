@@ -338,7 +338,7 @@ var cardStatus = paymentBlock.querySelector('.payment__card-status');
 
 var onPaymentBlockChange = function () {
   var isCardCvcValid = function () {
-    return inputCardCvc.value <= 999 && inputCardCvc.value > 99
+    return inputCardCvc.value <= 999 && inputCardCvc.value > 99;
   };
 
   var isCardValid = isCardNumberValid() && isCardDateValid(inputCardYear.value) && isCardCvcValid() && inputCardName.value;
